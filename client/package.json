@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3030",
-    "build": "next build",
-    "start": "next start -p 3030"
+    "dev": "powershell -Command \"$env:NODE_OPTIONS = '--openssl-legacy-provider'; next dev -p 3030\"",
+    "build": "powershell -Command \"$env:NODE_OPTIONS = '--openssl-legacy-provider'; next build\"",
+    "start": "powershell -Command \"$env:NODE_OPTIONS = '--openssl-legacy-provider'; next start -p 3030\""
   },
   "dependencies": {
     "array-shuffle": "^2.0.0",
