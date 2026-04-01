@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import pharmaRoute from './routes/pharma.routes.js';
 
 
 dotenv.config();
@@ -17,6 +18,11 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(express.json());
+app.use(cookieParser());
+
+
+app.use("/pharma", pharmaRoute);
 
 const connectDB = async () => {
     try {
