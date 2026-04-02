@@ -20,19 +20,19 @@ const PharmaSchema = new mongoose.Schema(
     dosageForm: {
       type: String,
       required: true,
-      enum: ["Tablets", "Capsules", "Oral Suspension", "Tablets for Oral Suspension"], 
+       
     },
     market: {
       type: String,
       required: true,
-      enum: ["Pepfar Universal New", "UAE", "Pepfar Universal New_Non-Royalty"]
+      
     },
     gtin: {
       type: String,
-      required: true,
+      required: false,
     },
     packInsertUrl: {
-      type: String, // link for "View/Download"
+      type: String, 
     },
   },
   

@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import pharmaRoute from './routes/pharma.routes.js';
+import pharmaroute from './routes/pharma.routes.js';
+import userroute from './routes/user.routes.js';
 
 
 dotenv.config();
@@ -22,7 +23,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use("/pharma", pharmaRoute);
+app.use("/pharma", pharmaroute);
+app.use("/user", userroute);
+
+
 
 const connectDB = async () => {
     try {
