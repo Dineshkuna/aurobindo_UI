@@ -34,6 +34,17 @@ const PharmaSchema = new mongoose.Schema(
     packInsertUrl: {
       type: String, 
     },
+    user: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      name : {
+        type: String,
+        required: true,
+      }
+    }
   },
   
 );

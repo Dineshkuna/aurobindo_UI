@@ -1,10 +1,11 @@
 import express from 'express';
-import { createNewUser } from '../controllers/auth.controllers.js';
+import { createNewUser, login } from '../controllers/auth.controllers.js';
 
 
 const route = express.Router();
 
 route.post('/createnewuser', createNewUser)
+route.post('/login', login)
 
 
 export default route;

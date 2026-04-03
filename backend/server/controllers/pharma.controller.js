@@ -1,8 +1,12 @@
 import Pharma from "../models/pharma.model.js";
+import User from '../models/user.model.js';
 
 
 export const createPharma = async (req, res, next) => {
+
     const { productName, itemCode, strength, gtin, market, dosageForm } = req.body;
+    const userId = req.userId;
+    const user = await User.findById(userId);
     
     try {
         let pharma = new Pharma({
@@ -12,6 +16,7 @@ export const createPharma = async (req, res, next) => {
             gtin,
             market,
             dosageForm,
+            user : {id: userId, name: user.name}
         });
 
         await pharma.save();
