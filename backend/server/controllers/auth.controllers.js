@@ -51,7 +51,7 @@ export const login  = async(req, res, next) => {
         const matchpassword = await bcrypt.compare(req.body.password, user.password);
 
         if(!matchpassword){
-            res.status(400).json({success: false, message:"Wrong password"})
+            return res.status(400).json({success: false, message:"Wrong password"})
         }
 
         const createtoken = (user) =>{
@@ -69,7 +69,7 @@ export const login  = async(req, res, next) => {
 
         const {password, role, ...rest} = user._doc;
 
-        res.status(200).json({
+        return res.status(200).json({
             success:true,
             message:"Login successful",
             token,
@@ -78,7 +78,7 @@ export const login  = async(req, res, next) => {
 
         })
     } catch (error) {
-        res.status(500).json({
+         return res.status(500).json({
             success:false,
             message:"Login failed",
             error: error.message
@@ -87,4 +87,84 @@ export const login  = async(req, res, next) => {
     }
 
 
+}
+
+
+export const updateUserProfile = async(req, res, next) => {
+    const userId = req.params.id;
+
+    try {
+        const updateUser = await User.findByIdAndUpdate(userId, {$set: req.body}, { new: true });
+
+        res.status(200).json({success: true, message: "User profile updated successfully", data: updateUser})
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+}
+
+
+export const deleteUserProfile = async(req, res, next) => {
+    const userId = req.params.id;
+
+    try{
+        await User.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to delete User",
+            error: error.message
+        })
+    }
+}
+ 
+
+export const allusers = async(req, res, next)=> {
+    try {
+        const users = await User.find({}).select("-password");
+
+        return res.status(200).json({
+            success:true,
+            message:"All users found",
+            data: users
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Failed to get all users",
+            error: error.message
+        })
+
+    } 
+}
+
+
+export const singleuser = async(req, res, next)=> {
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId);
+
+        const usersdata = user;
+        console.log(usersdata);
+        
+        return res.status(200).json({
+            success:true,
+            message:"User found",
+            data: user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Failed to get user",
+            error: error.message
+        })
+    }
 }

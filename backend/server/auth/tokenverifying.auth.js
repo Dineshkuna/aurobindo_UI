@@ -8,7 +8,7 @@ export const userauth = async(req, res, next) => {
 
     if(!token || !token.startsWith('Bearer')){
         return res.status(401).json({
-            sucess: false,
+            success: false,
             message: "No token, Authorization denied"
         })
     }
@@ -17,6 +17,9 @@ export const userauth = async(req, res, next) => {
         const tokengetting = token.split(" ")[1]
 
         const decodedToken = jwt.verify(tokengetting, process.env.TOKEN)
+
+         req.user = decodedToken;
+
         req.userId = decodedToken.id;
         req.userRole = decodedToken.role;
 
@@ -42,9 +45,9 @@ export const roleRoute = (roles) => (req, res, next) => {
 
         const userRole = req.userRole;
 
-        if (userRole === "user") {
+        if (userRole === "user" && roles.includes("user")) {
             next();
-        } else if (userRole === "admin") {
+        } else if (userRole === "admin" && roles.includes("admin")) {
             next();
         } else {
             return res.status(401).json({
@@ -60,3 +63,4 @@ export const roleRoute = (roles) => (req, res, next) => {
         });
     }
 };
+
