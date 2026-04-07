@@ -1,6 +1,8 @@
 import React from 'react'
 import Head from 'next/head'
 
+
+
 function productlist({productsData}) {
   return (
     <>
@@ -10,9 +12,9 @@ function productlist({productsData}) {
             <meta name="keywords" content="Aurobindo Pharma product list, pharmaceutical APIs, drug formulations, therapeutic portfolio, Aurobindo Pharma catalog, healthcare solutions" />
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href="https://products.aurobindo.com/product-list" />
-          </Head>
+      </Head>
           
-    	<section id="page-title" className="page-title-parallax page-title-dark" style={{"background-image":"url(/img/banners/aboutbanner.png);"}}>
+    <section id="page-title" className="page-title-parallax page-title-dark" style={{"background-image":"url(/img/banners/aboutbanner.png);"}}>
 			<div className="container clearfix">
 				{/* <h1 className="pdb-60">AUROBINDO IMPACTING LIVES AND <br/> LIVELIHOODS</h1>   */}
 				<ol className="breadcrumb">
@@ -45,12 +47,13 @@ function productlist({productsData}) {
             </thead>
             <tbody>
                 {
-                    productsData.result.map(product => {
+                    productsData?.data?.map(product => {
                         return (<tr> 
-                            <td>{product.product_name}</td>
-                            <td>{product.version}</td>
+                            <td>{product.productName}</td>
+                            <td>{product.itemCode}</td>
+                            
                             <td>{product.strength}</td>
-                            <td>{product.dosage}</td>
+                            <td>{product.dosageForm}</td>
                             <td>{product.market}</td>
                             <td>{product.gtin}</td>
                             <td><a href={"https://products.aurobindo.com/api/uploads/" + product.file_name} target="_blank" style={{color: '#017eb6', 'text-align': 'center'}}>View/Download</a></td> 
@@ -77,8 +80,10 @@ function productlist({productsData}) {
 }
 
 export async function getServerSideProps () {
-	const response1 = await fetch('http://3.232.144.124:8090' + '/api_read/products/active/list')
+	const response1 = await fetch(`${process.env.REACT_APP_SERVER_SIDE_URL}/pharma/getPharma`)
 	const productsData = await response1.json()
+  console.log("productsData", productsData)
 	return { props: {productsData }};
   }
+  
 export default productlist

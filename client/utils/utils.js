@@ -1,4 +1,8 @@
 
+
+REACT_APP_SERVER_SIDE_URL="http://localhost:8080"
+
+
 exports.getTimePeriods = (count) => {
     let timePeriods = [];
     let currentYear = new Date().getFullYear();
@@ -9,3 +13,5 @@ exports.getTimePeriods = (count) => {
     }
     return timePeriods;
 }
+
+
