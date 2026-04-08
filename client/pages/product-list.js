@@ -1,9 +1,9 @@
-import React from 'react'
 import Head from 'next/head'
 
 
-
 function productlist({productsData}) {
+
+
   return (
     <>
      <Head>
@@ -35,7 +35,7 @@ function productlist({productsData}) {
       <div className="table-responsive">
         <table className="table table-bordered">
             <thead>
-            <tr>  
+            <tr >  
                 <th>Product Name</th>
                 <th>Item Code</th>
                 <th>Strength</th>
@@ -45,10 +45,13 @@ function productlist({productsData}) {
                 <th>Pack Insert (SmPC+PIL)</th> 
             </tr>
             </thead>
-            <tbody>
+            <tbody >
                 {
                     productsData?.data?.map(product => {
-                        return (<tr> 
+                      // console.log(productsData);
+                      
+                        return (
+                        <tr key={product.id}> 
                             <td>{product.productName}</td>
                             <td>{product.itemCode}</td>
                             
@@ -79,11 +82,16 @@ function productlist({productsData}) {
   )
 }
 
+
+
 export async function getServerSideProps () {
 	const response1 = await fetch(`${process.env.REACT_APP_SERVER_SIDE_URL}/pharma/getPharma`)
-	const productsData = await response1.json()
-  console.log("productsData", productsData)
-	return { props: {productsData }};
-  }
   
+  
+	const productsData = await response1.json()
+  console.log("productsData" + productsData)
+	return { props: {productsData}};
+  }
+
+
 export default productlist
