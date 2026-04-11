@@ -32,6 +32,13 @@ function productlist({productsData}) {
                                 <span className="spancolor">Please click the product title for more information.</span>
 								</p>
 								</div>
+
+					{productsData?.error && (
+						<div style={{padding: '15px', background: '#ffe0e0', color: '#d23c3c', borderRadius: '4px', marginBottom: '20px'}}>
+							<strong>Error loading products:</strong> {productsData.error}
+						</div>
+					)}
+
       <div className="table-responsive">
         <table className="table table-bordered">
             <thead>
@@ -46,25 +53,32 @@ function productlist({productsData}) {
             </tr>
             </thead>
             <tbody >
-                {
-                    productsData?.data?.map(product => {
-                      // console.log(productsData);
-                      
+                {productsData?.data && productsData.data.length > 0 ? (
+                    productsData.data.map(product => {
                         return (
-                        <tr key={product.id}> 
+                        <tr key={product._id}>
                             <td>{product.productName}</td>
                             <td>{product.itemCode}</td>
-                            
                             <td>{product.strength}</td>
                             <td>{product.dosageForm}</td>
                             <td>{product.market}</td>
                             <td>{product.gtin}</td>
-                            <td><a href={"https://products.aurobindo.com/api/uploads/" + product.file_name} target="_blank" style={{color: '#017eb6', 'text-align': 'center'}}>View/Download</a></td> 
-            
+                            <td>
+                              {product.packInsertUrl ? (
+                                <a href={product.packInsertUrl} target="_blank" style={{color: '#017eb6', 'text-align': 'center'}}>View/Download</a>
+                              ) : (
+                                <span>N/A</span>
+                              )}
+                            </td>
                         </tr>)
                     })
-                }
-            
+                ) : (
+                    <tr>
+                        <td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>
+                            No products available
+                        </td>
+                    </tr>
+                )}
             </tbody>
         </table>
      </div>
@@ -85,12 +99,43 @@ function productlist({productsData}) {
 
 
 export async function getServerSideProps () {
-	const response1 = await fetch(`${process.env.REACT_APP_SERVER_SIDE_URL}/pharma/getPharma`)
-  
-  
-	const productsData = await response1.json()
-  console.log("productsData" + productsData)
-	return { props: {productsData}};
+	try {
+		console.log('Fetching products from admin-server...');
+
+		const response1 = await fetch(`http://localhost:8081/api/products/public/all`, {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		console.log('Response status:', response1.status);
+
+		if (!response1.ok) {
+			throw new Error(`Failed to fetch: ${response1.status} ${response1.statusText}`);
+		}
+
+		const productsData = await response1.json();
+		console.log('Fetched products:', productsData);
+
+		// Transform admin product data to match client format
+		const transformedData = {
+			success: true,
+			data: productsData.data || []
+		}
+
+		return {
+			props: { productsData: transformedData }
+		};
+	} catch (error) {
+		console.error('Error fetching products:', error.message);
+
+		// Fallback to empty data if fetch fails
+		return {
+			props: {
+				productsData: { success: false, data: [], error: error.message }
+			}
+		};
+	}
   }
 
 
